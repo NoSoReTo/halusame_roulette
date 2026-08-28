@@ -1,139 +1,570 @@
 * {
-    box-sizing: border-box;
-    }
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+  min-height: 100%;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  background: #f3f3f5;
+  color: #222;
+}
 
 body {
-margin: 0;
-min-height: 100vh;
-font-family: Arial, sans-serif;
-background: #111;
-color: white;
-display: flex;
-justify-content: center;
-align-items: center;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-x: hidden;
 }
 
-.container {
-width: min(90%, 500px);
-text-align: center;
+
+/* =========================
+   メイン
+========================= */
+
+.app {
+  width: 100%;
+  flex: 1;
+
+  padding-bottom: 100px;
 }
 
-h1 {
-margin-bottom: 10px;
-letter-spacing: 2px;
+
+/* =========================
+   上部
+========================= */
+
+.top-bar {
+  height: 115px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 20px 28px;
 }
 
-.mode {
-margin-bottom: 25px;
-opacity: 0.8;
+
+/* 丸いボタン */
+
+.icon-button {
+  width: 110px;
+  height: 110px;
+
+  border-radius: 50%;
+
+  border: 3px solid #333;
+
+  background: transparent;
+
+  font-size: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: default;
 }
 
-.roulette-wrapper {
-position: relative;
-width: 320px;
-height: 320px;
-margin: 0 auto 30px;
+
+/* ADS */
+
+.ads-off {
+  width: 110px;
+  height: 110px;
+
+  border-radius: 50%;
+
+  border: 3px solid #d85143;
+
+  color: #555;
+
+  font-size: 30px;
+  font-weight: 300;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  left: 145px;
 }
+
+
+/* ADS斜線 */
+
+.ads-off::after {
+  content: "";
+
+  position: absolute;
+
+  width: 140px;
+  height: 3px;
+
+  background: #d85143;
+
+  transform: rotate(45deg);
+}
+
+
+/* =========================
+   タイトル
+========================= */
+
+.title {
+  text-align: center;
+
+  margin:
+    10px 0
+    70px;
+
+  font-size: 50px;
+  font-weight: 400;
+
+  letter-spacing: 2px;
+}
+
+
+/* =========================
+   ルーレット全体
+========================= */
+
+.roulette-area {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: relative;
+}
+
+
+/* =========================
+   矢印
+========================= */
 
 .pointer {
-position: absolute;
-top: -30px;
-left: 50%;
-transform: translateX(-50%);
-font-size: 42px;
-z-index: 10;
+  width: 0;
+  height: 0;
+
+  border-left: 52px solid transparent;
+  border-right: 52px solid transparent;
+
+  border-top: 0;
+  border-bottom: 95px solid #ff3017;
+
+  position: absolute;
+
+  top: -72px;
+
+  z-index: 20;
 }
 
-.roulette {
-width: 320px;
-height: 320px;
-border-radius: 50%;
-position: relative;
-overflow: hidden;
-border: 8px solid white;
-transition: transform 4s cubic-bezier(0.12, 0.8, 0.15, 1);
 
-background:
-conic-gradient(
-#e74c3c 0deg 36deg,
-#2c3e50 36deg 72deg,
-#e74c3c 72deg 108deg,
-#2c3e50 108deg 144deg,
-#e74c3c 144deg 180deg,
-#2c3e50 180deg 216deg,
-#e74c3c 216deg 252deg,
-#2c3e50 252deg 288deg,
-#e74c3c 288deg 324deg,
-#2c3e50 324deg 360deg
-);
+/* =========================
+   ルーレット
+========================= */
+
+.wheel-wrapper {
+  width: min(760px, 82vw);
+  aspect-ratio: 1;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+
+.wheel {
+  width: 100%;
+  height: 100%;
+
+  border-radius: 50%;
+
+  position: absolute;
+
+  overflow: hidden;
+
+  /*
+    0〜9
+    1区画36度
+  */
+
+  background:
+    conic-gradient(
+      from -18deg,
+
+      #14d792 0deg 36deg,
+      #bb62d5 36deg 72deg,
+      #ffc01d 72deg 108deg,
+      #ff7910 108deg 144deg,
+      #ff3216 144deg 180deg,
+      #eb2695 180deg 216deg,
+      #b72ad3 216deg 252deg,
+      #5934d0 252deg 288deg,
+      #267bc7 288deg 324deg,
+      #28a9c2 324deg 360deg
+    );
+
+  transform: rotate(0deg);
+
+  transition:
+    transform
+    4.5s
+    cubic-bezier(
+      0.12,
+      0.75,
+      0.1,
+      1
+    );
+
+  will-change: transform;
+}
+
+
+/* =========================
+   数字
+========================= */
 
 .number {
-position: absolute;
-left: 50%;
-top: 50%;
-width: 50%;
-height: 50%;
-transform-origin: 0 0;
-padding-top: 20px;
-font-size: 26px;
-font-weight: bold;
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 50%;
+  height: 50%;
+
+  transform-origin:
+    0
+    0;
+
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: center;
+
+  padding-top: 28px;
+
+  font-size: clamp(
+    34px,
+    5vw,
+    55px
+  );
+
+  font-weight: 500;
+
+  color: #161616;
+
+  z-index: 2;
 }
 
-.n0 { transform: rotate(18deg) translateY(-145px); }
-.n1 { transform: rotate(54deg) translateY(-145px); }
-.n2 { transform: rotate(90deg) translateY(-145px); }
-.n3 { transform: rotate(126deg) translateY(-145px); }
-.n4 { transform: rotate(162deg) translateY(-145px); }
-.n5 { transform: rotate(198deg) translateY(-145px); }
-.n6 { transform: rotate(234deg) translateY(-145px); }
-.n7 { transform: rotate(270deg) translateY(-145px); }
-.n8 { transform: rotate(306deg) translateY(-145px); }
-.n9 { transform: rotate(342deg) translateY(-145px); }
 
-.result {
-margin: 20px 0;
+/*
+  各数字の位置
+
+  translateYで中心から外側へ移動
+*/
+
+.n0 {
+  transform:
+    rotate(18deg)
+    translateY(-44%);
 }
 
-.result span {
-display: block;
-font-size: 14px;
-opacity: 0.7;
+.n1 {
+  transform:
+    rotate(54deg)
+    translateY(-44%);
 }
 
-.result strong {
-font-size: 72px;
+.n2 {
+  transform:
+    rotate(90deg)
+    translateY(-44%);
 }
 
-button {
-width: 220px;
-padding: 16px;
-border: none;
-border-radius: 50px;
-font-size: 20px;
-font-weight: bold;
-cursor: pointer;
+.n3 {
+  transform:
+    rotate(126deg)
+    translateY(-44%);
 }
 
-button:disabled {
-opacity: 0.5;
-cursor: not-allowed;
+.n4 {
+  transform:
+    rotate(162deg)
+    translateY(-44%);
 }
 
-.count {
-margin-top: 25px;
-opacity: 0.8;
+.n5 {
+  transform:
+    rotate(198deg)
+    translateY(-44%);
 }
 
-.info {
-font-size: 13px;
-opacity: 0.6;
+.n6 {
+  transform:
+    rotate(234deg)
+    translateY(-44%);
 }
 
-@media (max-width: 400px) {
-.roulette-wrapper,
-.roulette {
-width: 280px;
-height: 280px;
+.n7 {
+  transform:
+    rotate(270deg)
+    translateY(-44%);
 }
+
+.n8 {
+  transform:
+    rotate(306deg)
+    translateY(-44%);
+}
+
+.n9 {
+  transform:
+    rotate(342deg)
+    translateY(-44%);
+}
+
+
+/* =========================
+   中央START
+========================= */
+
+.start-button {
+  width: 52%;
+  aspect-ratio: 1;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #f3f3f5;
+
+  color: #222;
+
+  font-size: clamp(
+    42px,
+    8vw,
+    80px
+  );
+
+  font-weight: 400;
+
+  position: relative;
+
+  z-index: 10;
+
+  cursor: pointer;
+
+  transition:
+    color 0.08s ease,
+    transform 0.08s ease;
+}
+
+
+/*
+  押している間だけ赤
+*/
+
+.start-button:active {
+  color: #ff3217;
+
+  transform: scale(0.97);
+}
+
+
+/*
+  JavaScriptで回転中にも赤くする
+*/
+
+.start-button.spinning {
+  color: #ff3217;
+}
+
+
+/* =========================
+   結果
+========================= */
+
+.result-area {
+  width: 100%;
+
+  text-align: center;
+
+  margin-top: 35px;
+
+  min-height: 80px;
+
+  font-size: 45px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+
+  transform: translateY(-10px);
+
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+
+/*
+  結果表示
+*/
+
+.result-area.show {
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+
+.result-label {
+  font-weight: 400;
+}
+
+
+.result-number {
+  font-weight: 500;
+}
+
+
+/* =========================
+   下部
+========================= */
+
+.bottom-bar {
+  width: 100%;
+  height: 120px;
+
+  border-top:
+    1px solid #ddd;
+
+  background: #ececef;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: fixed;
+
+  bottom: 0;
+  left: 0;
+
+  z-index: 50;
+}
+
+
+.data-set {
+  font-size: 48px;
+
+  font-weight: 400;
+}
+
+
+/* =========================
+   スマホ
+========================= */
+
+@media (max-width: 600px) {
+
+  .top-bar {
+    height: 95px;
+
+    padding:
+      12px
+      20px;
+  }
+
+
+  .icon-button {
+    width: 78px;
+    height: 78px;
+
+    font-size: 34px;
+
+    border-width: 2px;
+  }
+
+
+  .ads-off {
+    width: 78px;
+    height: 78px;
+
+    left: 105px;
+
+    font-size: 22px;
+
+    border-width: 2px;
+  }
+
+
+  .ads-off::after {
+    width: 100px;
+
+    height: 2px;
+  }
+
+
+  .title {
+    margin:
+      10px 0
+      65px;
+
+    font-size: 30px;
+  }
+
+
+  .pointer {
+    border-left-width: 40px;
+    border-right-width: 40px;
+
+    border-bottom-width: 75px;
+
+    top: -58px;
+  }
+
+
+  .wheel-wrapper {
+    width: 82vw;
+  }
+
+
+  .result-area {
+    margin-top: 30px;
+
+    font-size: 36px;
+  }
+
+
+  .bottom-bar {
+    height: 85px;
+  }
+
+
+  .data-set {
+    font-size: 32px;
+  }
 }
