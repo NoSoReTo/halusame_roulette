@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0〜9 NUMBER ROULETTE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>NUMBER ROULETTE</h1>
+<p class="mode" id="modeText">演出シーケンス</p>
+<div class="roulette-wrapper">
+  <div class="pointer">▼</div>
+  <div class="roulette" id="roulette">
+    <div class="number n0">0</div>
+    <div class="number n1">1</div>
+    <div class="number n2">2</div>
+    <div class="number n3">3</div>
+    <div class="number n4">4</div>
+    <div class="number n5">5</div>
+    <div class="number n6">6</div>
+    <div class="number n7">7</div>
+    <div class="number n8">8</div>
+    <div class="number n9">9</div>
+  </div>
+</div>
+<div class="result">
+  <span>RESULT</span>
+  <strong id="resultNumber">?</strong>
+</div>
+<button id="spinButton">SPIN</button>
+<p class="count">
+  回転回数：<span id="spinCount">0</span>
+</p>
+<p class="info" id="infoText">
+  1〜10回目：演出シーケンス
+</p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
