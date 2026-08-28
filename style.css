@@ -1,5 +1,5 @@
 /* ========================================
-   基本
+   基本設定
 ======================================== */
 
 * {
@@ -17,6 +17,7 @@ body {
 
 body {
   background: #f5f5f7;
+
   color: #202124;
 
   font-family:
@@ -45,7 +46,7 @@ body {
 
 
 /* ========================================
-   上部
+   上部ボタン
 ======================================== */
 
 .top-controls {
@@ -61,13 +62,16 @@ body {
   display: flex;
 
   justify-content: space-between;
+
   align-items: flex-start;
 }
 
 
 .left-controls {
   display: flex;
+
   align-items: center;
+
   gap: 16px;
 }
 
@@ -86,8 +90,8 @@ body {
 
   display: flex;
 
-  align-items: center;
   justify-content: center;
+  align-items: center;
 
   background: transparent;
 }
@@ -95,18 +99,20 @@ body {
 
 .camera-icon {
   font-size: 44px;
+
   line-height: 1;
 }
 
 
 .settings-icon {
   font-size: 55px;
+
   line-height: 1;
 }
 
 
 /* ========================================
-   ADS
+   ADSボタン
 ======================================== */
 
 .ads-button {
@@ -121,8 +127,8 @@ body {
 
   display: flex;
 
-  align-items: center;
   justify-content: center;
+  align-items: center;
 
   position: relative;
 
@@ -132,14 +138,14 @@ body {
 
 .ads-button span {
   font-size: 31px;
+
   font-weight: 300;
 
   position: relative;
+
   z-index: 2;
 }
 
-
-/* 斜線 */
 
 .ads-button::after {
   content: "";
@@ -173,7 +179,12 @@ body {
 
   color: #22272b;
 
-  font-size: clamp(32px, 5.4vw, 52px);
+  font-size:
+    clamp(
+      32px,
+      5.4vw,
+      52px
+    );
 
   font-weight: 400;
 
@@ -184,7 +195,7 @@ body {
 
 
 /* ========================================
-   ルーレット
+   ルーレットエリア
 ======================================== */
 
 .roulette-section {
@@ -201,12 +212,14 @@ body {
 
 
 /* ========================================
-   矢印
+   赤い矢印
+
+   前回より少し小さく調整
 ======================================== */
 
 .pointer {
-  width: 102px;
-  height: 96px;
+  width: 82px;
+  height: 78px;
 
   background: #ff3219;
 
@@ -219,18 +232,22 @@ body {
 
   position: absolute;
 
-  top: -70px;
+  top: -60px;
 
   z-index: 20;
 }
 
 
 /* ========================================
-   ルーレット外枠
+   ルーレット
 ======================================== */
 
 .wheel-container {
-  width: min(770px, 80vw);
+  width:
+    min(
+      770px,
+      80vw
+    );
 
   aspect-ratio: 1;
 
@@ -238,14 +255,10 @@ body {
 
   display: flex;
 
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-
-/* ========================================
-   SVG
-======================================== */
 
 .roulette-svg {
   width: 100%;
@@ -257,15 +270,14 @@ body {
 }
 
 
-/*
-  回転アニメーション
-
-  SVGの中心は
-  500 500
-*/
+/* ========================================
+   回転
+======================================== */
 
 #wheelGroup {
-  transform-origin: 500px 500px;
+  transform-origin:
+    500px
+    500px;
 
   transition:
     transform
@@ -280,7 +292,9 @@ body {
 
 
 /* ========================================
-   中央START
+   STARTボタン
+
+   前回より文字を小さく
 ======================================== */
 
 .start-button {
@@ -302,9 +316,9 @@ body {
 
   font-size:
     clamp(
-      52px,
-      8.5vw,
-      82px
+      48px,
+      6.8vw,
+      68px
     );
 
   font-weight: 400;
@@ -323,9 +337,9 @@ body {
 }
 
 
-/*
-  押している間だけ赤
-*/
+/* ========================================
+   押している間だけ赤
+======================================== */
 
 .start-button:active {
   color: #ff3219;
@@ -333,10 +347,6 @@ body {
   transform: scale(0.985);
 }
 
-
-/*
-  JSから確実に押下中を管理
-*/
 
 .start-button.pressed {
   color: #ff3219;
@@ -360,8 +370,6 @@ body {
 
   justify-content: center;
   align-items: center;
-
-  gap: 0;
 
   color: #202124;
 
@@ -414,14 +422,15 @@ body {
 
   z-index: 100;
 
-  border-top: 1px solid #dedee0;
+  border-top:
+    1px solid #dedee0;
 
   background: #eeeeef;
 
   display: flex;
 
-  align-items: center;
   justify-content: center;
+  align-items: center;
 
   padding-bottom:
     env(safe-area-inset-bottom);
@@ -503,6 +512,7 @@ body {
 
   .ads-button::after {
     width: 110px;
+
     height: 2.5px;
   }
 
@@ -522,11 +532,23 @@ body {
   }
 
 
+  /* スマホ用の矢印 */
   .pointer {
-    width: 84px;
-    height: 80px;
+    width: 72px;
+    height: 68px;
 
-    top: -59px;
+    top: -51px;
+  }
+
+
+  /* STARTをさらに少し小さく */
+  .start-button {
+    font-size:
+      clamp(
+        44px,
+        7vw,
+        58px
+      );
   }
 
 
@@ -547,6 +569,7 @@ body {
   .data-text {
     font-size: 32px;
   }
+
 }
 
 
@@ -582,4 +605,5 @@ body {
   .ads-button span {
     font-size: 21px;
   }
+
 }
