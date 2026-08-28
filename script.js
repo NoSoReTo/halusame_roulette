@@ -2,13 +2,17 @@
    要素取得
 ======================================== */
 
-const wheelGroup = document.getElementById("wheelGroup");
+const wheelGroup =
+  document.getElementById("wheelGroup");
 
-const spinButton = document.getElementById("spinButton");
+const spinButton =
+  document.getElementById("spinButton");
 
-const resultArea = document.getElementById("resultArea");
+const resultArea =
+  document.getElementById("resultArea");
 
-const resultNumber = document.getElementById("resultNumber");
+const resultNumber =
+  document.getElementById("resultNumber");
 
 
 /* ========================================
@@ -42,43 +46,49 @@ const SVG_NS =
 const CENTER_X = 500;
 const CENTER_Y = 500;
 
+
+/* ルーレット外周 */
+
 const RADIUS = 500;
 
 
 /* ========================================
    ルーレットの色
+
+   参考画像に合わせて
+   6〜9をより鮮やかに調整
 ======================================== */
 
 const colors = [
 
-  /* 0 */
+  /* 0 黄 */
   "#ffc21d",
 
-  /* 1 */
+  /* 1 オレンジ */
   "#ff7b0c",
 
-  /* 2 */
+  /* 2 赤 */
   "#ff3318",
 
-  /* 3 */
+  /* 3 ピンク */
   "#e9279a",
 
-  /* 4 */
+  /* 4 紫 */
   "#aa2bd5",
 
-  /* 5 */
+  /* 5 青紫 */
   "#5631d0",
 
-  /* 6 */
+  /* 6 鮮やかな青 */
   "#287fd1",
 
-  /* 7 */
+  /* 7 鮮やかな水色 */
   "#26abc7",
 
-  /* 8 */
+  /* 8 鮮やかなエメラルド */
   "#08d98a",
 
-  /* 9 */
+  /* 9 明るい紫 */
   "#bd63d8"
 ];
 
@@ -192,7 +202,12 @@ function createWheel() {
   ) {
 
 
-    /* 1区画36度 */
+    /*
+      1区画36度
+
+      0が上から右上へ向かう
+      参考画像と同じ配置
+    */
 
     const startAngle =
       -90 +
@@ -242,7 +257,16 @@ function createWheel() {
       18;
 
 
-    /* 数字を外側寄りに配置 */
+    /*
+      前回より外側へ移動。
+
+      前回: 305
+
+      今回: 355
+
+      参考画像の数字位置に
+      かなり近い位置。
+    */
 
     const textPoint =
       getPoint(
@@ -289,6 +313,10 @@ function createWheel() {
     );
 
 
+    /*
+      数字サイズ
+    */
+
     text.setAttribute(
       "font-size",
       "58"
@@ -300,6 +328,10 @@ function createWheel() {
       "500"
     );
 
+
+    /*
+      数字は常に正立
+    */
 
     wheelGroup.appendChild(
       text
@@ -318,7 +350,7 @@ createWheel();
 
 
 /* ========================================
-   STARTを押している間だけ赤くする
+   START押下時
 ======================================== */
 
 function startPress() {
@@ -339,7 +371,9 @@ function endPress() {
 }
 
 
-/* PC */
+/* ========================================
+   PC
+======================================== */
 
 spinButton.addEventListener(
   "mousedown",
@@ -359,7 +393,9 @@ spinButton.addEventListener(
 );
 
 
-/* スマホ */
+/* ========================================
+   スマホ
+======================================== */
 
 spinButton.addEventListener(
   "touchstart",
@@ -405,7 +441,7 @@ spinButton.addEventListener(
 function spinWheel() {
 
 
-  /* 回転中は連打不可 */
+  /* 回転中は無効 */
 
   if (spinning) {
     return;
@@ -415,7 +451,7 @@ function spinWheel() {
   spinning = true;
 
 
-  /* 結果を非表示 */
+  /* 結果を一度消す */
 
   resultArea.classList.remove(
     "show"
@@ -424,13 +460,14 @@ function spinWheel() {
 
   /* ====================================
      結果決定
-
-     最初の10回は指定順
-     11回目以降は完全ランダム
   ==================================== */
 
   let result;
 
+
+  /*
+    最初の10回
+  */
 
   if (
     spinCount <
@@ -444,6 +481,11 @@ function spinWheel() {
 
   }
 
+
+  /*
+    11回目以降はランダム
+  */
+
   else {
 
     result =
@@ -456,64 +498,36 @@ function spinWheel() {
 
 
   /* ====================================
-     停止位置
-
-     1区画 = 36度
-
-     中央固定ではなく、
-     当選数字の区画内で
-     ランダムな位置に停止。
-
-     境界から0.5度だけ離すので、
-     かなりギリギリにも止まる。
+     停止位置計算
   ==================================== */
 
 
-  const sectorStartAngle =
-    -90 +
+  /*
+    各数字の区画中央
+
+    0 = -72度
+    1 = -36度
+    2 = 0度
+    ...
+
+    矢印は -90度
+  */
+
+  const sectorCenterAngle =
+    -72 +
     result *
     36;
 
 
   /*
-    0.5〜35.5度の範囲
-
-    これにより、
-    区画の左端・中央・右端付近の
-    どこにでもランダムに停止する。
-  */
-
-  const offsetInsideSector =
-    0.5 +
-    Math.random() *
-    35;
-
-
-  /*
-    実際に矢印が指す
-    ルーレット上の角度
-  */
-
-  const targetAngleOnWheel =
-    sectorStartAngle +
-    offsetInsideSector;
-
-
-  /*
-    矢印は真上 = -90度
-
-    選ばれた区画内のランダム位置を
-    矢印位置まで回転させる
+    数字の区画中央を
+    上の矢印に合わせる
   */
 
   let targetRotation =
     -90 -
-    targetAngleOnWheel;
+    sectorCenterAngle;
 
-
-  /*
-    0〜360度に正規化
-  */
 
   targetRotation =
     (
@@ -524,10 +538,6 @@ function spinWheel() {
     360;
 
 
-  /*
-    現在の角度
-  */
-
   const currentAngle =
     (
       currentRotation %
@@ -537,18 +547,10 @@ function spinWheel() {
     360;
 
 
-  /*
-    目的角度までの差
-  */
-
   let adjustment =
     targetRotation -
     currentAngle;
 
-
-  /*
-    必ず正方向に回転
-  */
 
   if (
     adjustment <= 0
@@ -562,12 +564,12 @@ function spinWheel() {
   /* ====================================
      追加回転
 
-     7〜10周
+     6〜9周
   ==================================== */
 
   const extraSpins =
     (
-      7 +
+      6 +
       Math.floor(
         Math.random() *
         4
@@ -575,10 +577,6 @@ function spinWheel() {
     ) *
     360;
 
-
-  /*
-    最終回転角度
-  */
 
   currentRotation +=
     extraSpins +
@@ -594,7 +592,7 @@ function spinWheel() {
 
 
   /* ====================================
-     7秒後に結果表示
+     回転終了
   ==================================== */
 
   setTimeout(
@@ -617,7 +615,7 @@ function spinWheel() {
 
 
     },
-    7000
+    4800
   );
 
 }
