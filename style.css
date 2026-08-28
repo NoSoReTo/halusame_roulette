@@ -1,0 +1,139 @@
+* {
+    box-sizing: border-box;
+    }
+
+body {
+margin: 0;
+min-height: 100vh;
+font-family: Arial, sans-serif;
+background: #111;
+color: white;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.container {
+width: min(90%, 500px);
+text-align: center;
+}
+
+h1 {
+margin-bottom: 10px;
+letter-spacing: 2px;
+}
+
+.mode {
+margin-bottom: 25px;
+opacity: 0.8;
+}
+
+.roulette-wrapper {
+position: relative;
+width: 320px;
+height: 320px;
+margin: 0 auto 30px;
+}
+
+.pointer {
+position: absolute;
+top: -30px;
+left: 50%;
+transform: translateX(-50%);
+font-size: 42px;
+z-index: 10;
+}
+
+.roulette {
+width: 320px;
+height: 320px;
+border-radius: 50%;
+position: relative;
+overflow: hidden;
+border: 8px solid white;
+transition: transform 4s cubic-bezier(0.12, 0.8, 0.15, 1);
+
+background:
+conic-gradient(
+#e74c3c 0deg 36deg,
+#2c3e50 36deg 72deg,
+#e74c3c 72deg 108deg,
+#2c3e50 108deg 144deg,
+#e74c3c 144deg 180deg,
+#2c3e50 180deg 216deg,
+#e74c3c 216deg 252deg,
+#2c3e50 252deg 288deg,
+#e74c3c 288deg 324deg,
+#2c3e50 324deg 360deg
+);
+}
+
+.number {
+position: absolute;
+left: 50%;
+top: 50%;
+width: 50%;
+height: 50%;
+transform-origin: 0 0;
+padding-top: 20px;
+font-size: 26px;
+font-weight: bold;
+}
+
+.n0 { transform: rotate(18deg) translateY(-145px); }
+.n1 { transform: rotate(54deg) translateY(-145px); }
+.n2 { transform: rotate(90deg) translateY(-145px); }
+.n3 { transform: rotate(126deg) translateY(-145px); }
+.n4 { transform: rotate(162deg) translateY(-145px); }
+.n5 { transform: rotate(198deg) translateY(-145px); }
+.n6 { transform: rotate(234deg) translateY(-145px); }
+.n7 { transform: rotate(270deg) translateY(-145px); }
+.n8 { transform: rotate(306deg) translateY(-145px); }
+.n9 { transform: rotate(342deg) translateY(-145px); }
+
+.result {
+margin: 20px 0;
+}
+
+.result span {
+display: block;
+font-size: 14px;
+opacity: 0.7;
+}
+
+.result strong {
+font-size: 72px;
+}
+
+button {
+width: 220px;
+padding: 16px;
+border: none;
+border-radius: 50px;
+font-size: 20px;
+font-weight: bold;
+cursor: pointer;
+}
+
+button:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+}
+
+.count {
+margin-top: 25px;
+opacity: 0.8;
+}
+
+.info {
+font-size: 13px;
+opacity: 0.6;
+}
+
+@media (max-width: 400px) {
+.roulette-wrapper,
+.roulette {
+width: 280px;
+height: 280px;
+}
+}
