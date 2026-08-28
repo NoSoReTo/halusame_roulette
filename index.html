@@ -2,94 +2,101 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
-  <title>さめジャンボ</title>
+  <title>第一回はるさめ宝くじ</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div class="app">
+  <main class="app">
 
-    <!-- 上部 -->
-    <header class="top-bar">
+    <!-- 上部アイコン -->
+    <div class="top-controls">
 
-      <button class="icon-button" aria-label="カメラ">
-        📷
-      </button>
+      <div class="left-controls">
 
-      <div class="ads-off">
-        ADS
+        <div class="circle-button camera-button">
+          <span class="camera-icon">📷</span>
+        </div>
+
+        <div class="ads-button">
+          <span>ADS</span>
+        </div>
+
       </div>
 
-      <button class="icon-button" aria-label="設定">
-        ⚙
-      </button>
 
-    </header>
+      <div class="circle-button settings-button">
+        <span class="settings-icon">⚙</span>
+      </div>
+
+    </div>
 
 
     <!-- タイトル -->
     <h1 class="title">
-      第一回はるさめジャンボ
+      第一回はるさめ宝くじ
     </h1>
 
 
-    <!-- ルーレット -->
-    <div class="roulette-area">
+    <!-- ルーレットエリア -->
+    <section class="roulette-section">
 
       <!-- 矢印 -->
       <div class="pointer"></div>
 
 
-      <div class="wheel-wrapper">
+      <!-- SVGルーレット -->
+      <div class="wheel-container">
 
-        <div class="wheel" id="wheel">
+        <svg
+          id="rouletteSvg"
+          class="roulette-svg"
+          viewBox="0 0 1000 1000"
+          xmlns="http://www.w3.org/2000/svg"
+        >
 
-          <div class="number n0">0</div>
-          <div class="number n1">1</div>
-          <div class="number n2">2</div>
-          <div class="number n3">3</div>
-          <div class="number n4">4</div>
-          <div class="number n5">5</div>
-          <div class="number n6">6</div>
-          <div class="number n7">7</div>
-          <div class="number n8">8</div>
-          <div class="number n9">9</div>
+          <!-- 回転する部分 -->
+          <g id="wheelGroup"></g>
 
-        </div>
+        </svg>
 
 
         <!-- 中央START -->
-        <button id="spinButton" class="start-button">
+        <button
+          id="spinButton"
+          class="start-button"
+          type="button"
+        >
           START
         </button>
 
       </div>
 
-    </div>
+    </section>
 
 
     <!-- 結果 -->
-    <div class="result-area" id="resultArea">
-
-      <span class="result-label">結果:</span>
-
-      <span class="result-number" id="resultNumber">
-        ?
-      </span>
-
+    <div
+      id="resultArea"
+      class="result-area"
+    >
+      結果:<span id="resultNumber">?</span>
     </div>
 
-  </div>
+  </main>
 
 
   <!-- 下部 -->
   <footer class="bottom-bar">
 
-    <div class="data-set">
+    <div class="data-text">
       データをセット
     </div>
 
