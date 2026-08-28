@@ -615,7 +615,7 @@ function spinWheel() {
 
 
     },
-    4800
+    7000
   );
 
 }
