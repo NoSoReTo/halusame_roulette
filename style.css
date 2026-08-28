@@ -1,609 +1,623 @@
 /* ========================================
-   基本設定
+   要素取得
 ======================================== */
 
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
+const wheelGroup = document.getElementById("wheelGroup");
 
-html,
-body {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-}
+const spinButton = document.getElementById("spinButton");
 
-body {
-  background: #f5f5f7;
+const resultArea = document.getElementById("resultArea");
 
-  color: #202124;
+const resultNumber = document.getElementById("resultNumber");
 
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
 
-  overflow-x: hidden;
+/* ========================================
+   最初の10回の結果
+
+   好きな数字に変更可能
+======================================== */
+
+const sequence = [
+  7,
+  3,
+  9,
+  1,
+  5,
+  0,
+  8,
+  2,
+  6,
+  4
+];
+
+
+/* ========================================
+   SVG設定
+======================================== */
+
+const SVG_NS =
+  "http://www.w3.org/2000/svg";
+
+
+const CENTER_X = 500;
+const CENTER_Y = 500;
+
+const RADIUS = 500;
+
+
+/* ========================================
+   ルーレットの色
+======================================== */
+
+const colors = [
+
+  /* 0 */
+  "#ffc21d",
+
+  /* 1 */
+  "#ff7b0c",
+
+  /* 2 */
+  "#ff3318",
+
+  /* 3 */
+  "#e9279a",
+
+  /* 4 */
+  "#aa2bd5",
+
+  /* 5 */
+  "#5631d0",
+
+  /* 6 */
+  "#287fd1",
+
+  /* 7 */
+  "#26abc7",
+
+  /* 8 */
+  "#08d98a",
+
+  /* 9 */
+  "#bd63d8"
+];
+
+
+/* ========================================
+   状態
+======================================== */
+
+let spinCount = 0;
+
+let currentRotation = 0;
+
+let spinning = false;
+
+
+/* ========================================
+   SVG要素生成
+======================================== */
+
+function createSvgElement(tagName) {
+
+  return document.createElementNS(
+    SVG_NS,
+    tagName
+  );
+
 }
 
 
 /* ========================================
-   アプリ全体
+   円周上の座標
 ======================================== */
 
-.app {
-  min-height: calc(100vh - 94px);
+function getPoint(
+  angle,
+  radius
+) {
 
-  padding:
-    env(safe-area-inset-top)
-    0
-    130px;
+  const rad =
+    angle *
+    Math.PI /
+    180;
+
+
+  return {
+
+    x:
+      CENTER_X +
+      radius *
+      Math.cos(rad),
+
+    y:
+      CENTER_Y +
+      radius *
+      Math.sin(rad)
+
+  };
+
 }
 
 
 /* ========================================
-   上部ボタン
+   扇形作成
 ======================================== */
 
-.top-controls {
-  width: 100%;
+function createSector(
+  startAngle,
+  endAngle
+) {
 
-  height: 120px;
-
-  padding:
-    22px
-    28px
-    0;
-
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: flex-start;
-}
-
-
-.left-controls {
-  display: flex;
-
-  align-items: center;
-
-  gap: 16px;
-}
-
-
-/* ========================================
-   丸ボタン
-======================================== */
-
-.circle-button {
-  width: 110px;
-  height: 110px;
-
-  border-radius: 50%;
-
-  border: 3px solid #33373a;
-
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  background: transparent;
-}
-
-
-.camera-icon {
-  font-size: 44px;
-
-  line-height: 1;
-}
-
-
-.settings-icon {
-  font-size: 55px;
-
-  line-height: 1;
-}
-
-
-/* ========================================
-   ADSボタン
-======================================== */
-
-.ads-button {
-  width: 110px;
-  height: 110px;
-
-  border-radius: 50%;
-
-  border: 3px solid #c95248;
-
-  color: #555b60;
-
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  position: relative;
-
-  overflow: visible;
-}
-
-
-.ads-button span {
-  font-size: 31px;
-
-  font-weight: 300;
-
-  position: relative;
-
-  z-index: 2;
-}
-
-
-.ads-button::after {
-  content: "";
-
-  position: absolute;
-
-  width: 145px;
-  height: 3px;
-
-  background: #c95248;
-
-  transform: rotate(45deg);
-
-  z-index: 3;
-}
-
-
-/* ========================================
-   タイトル
-======================================== */
-
-.title {
-  margin:
-    48px
-    0
-    92px;
-
-  padding: 0 15px;
-
-  text-align: center;
-
-  color: #22272b;
-
-  font-size:
-    clamp(
-      32px,
-      5.4vw,
-      52px
+  const start =
+    getPoint(
+      startAngle,
+      RADIUS
     );
 
-  font-weight: 400;
 
-  letter-spacing: 0.01em;
-
-  white-space: nowrap;
-}
-
-
-/* ========================================
-   ルーレットエリア
-======================================== */
-
-.roulette-section {
-  width: 100%;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  position: relative;
-}
-
-
-/* ========================================
-   赤い矢印
-
-   前回より少し小さく調整
-======================================== */
-
-.pointer {
-  width: 82px;
-  height: 78px;
-
-  background: #ff3219;
-
-  clip-path:
-    polygon(
-      0 0,
-      100% 0,
-      50% 100%
+  const end =
+    getPoint(
+      endAngle,
+      RADIUS
     );
 
-  position: absolute;
 
-  top: -60px;
+  return `
+    M ${CENTER_X} ${CENTER_Y}
 
-  z-index: 20;
+    L ${start.x} ${start.y}
+
+    A ${RADIUS} ${RADIUS}
+      0 0 1
+      ${end.x} ${end.y}
+
+    Z
+  `;
+
 }
 
 
 /* ========================================
-   ルーレット
+   ルーレット描画
 ======================================== */
 
-.wheel-container {
-  width:
-    min(
-      770px,
-      80vw
+function createWheel() {
+
+
+  for (
+    let number = 0;
+    number < 10;
+    number++
+  ) {
+
+
+    /* 1区画36度 */
+
+    const startAngle =
+      -90 +
+      number *
+      36;
+
+
+    const endAngle =
+      startAngle +
+      36;
+
+
+    /* ====================================
+       扇形
+    ==================================== */
+
+    const sector =
+      createSvgElement("path");
+
+
+    sector.setAttribute(
+      "d",
+      createSector(
+        startAngle,
+        endAngle
+      )
     );
 
-  aspect-ratio: 1;
 
-  position: relative;
-
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-}
-
-
-.roulette-svg {
-  width: 100%;
-  height: 100%;
-
-  display: block;
-
-  overflow: visible;
-}
-
-
-/* ========================================
-   回転
-======================================== */
-
-#wheelGroup {
-  transform-origin:
-    500px
-    500px;
-
-  transition:
-    transform
-    7s
-    cubic-bezier(
-      0.12,
-      0.72,
-      0.08,
-      1
-    );
-}
-
-
-/* ========================================
-   STARTボタン
-
-   前回より文字を小さく
-======================================== */
-
-.start-button {
-  width: 55%;
-
-  aspect-ratio: 1;
-
-  border: none;
-
-  border-radius: 50%;
-
-  background: #f5f5f7;
-
-  color: #202124;
-
-  position: absolute;
-
-  z-index: 10;
-
-  font-size:
-    clamp(
-      48px,
-      6.8vw,
-      68px
+    sector.setAttribute(
+      "fill",
+      colors[number]
     );
 
-  font-weight: 400;
 
-  letter-spacing: -0.02em;
-
-  cursor: pointer;
-
-  user-select: none;
-
-  touch-action: manipulation;
-
-  transition:
-    color 0.05s linear,
-    transform 0.05s linear;
-}
-
-
-/* ========================================
-   押している間だけ赤
-======================================== */
-
-.start-button:active {
-  color: #ff3219;
-
-  transform: scale(0.985);
-}
-
-
-.start-button.pressed {
-  color: #ff3219;
-
-  transform: scale(0.985);
-}
-
-
-/* ========================================
-   結果
-======================================== */
-
-.result-area {
-  width: 100%;
-
-  min-height: 80px;
-
-  margin-top: 48px;
-
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  color: #202124;
-
-  font-size:
-    clamp(
-      38px,
-      5.2vw,
-      52px
+    wheelGroup.appendChild(
+      sector
     );
 
-  font-weight: 400;
 
-  opacity: 0;
+    /* ====================================
+       数字
+    ==================================== */
 
-  transform:
-    translateY(-8px);
-
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
+    const textAngle =
+      startAngle +
+      18;
 
 
-.result-area.show {
-  opacity: 1;
+    /* 数字を外側寄りに配置 */
 
-  transform:
-    translateY(0);
-}
-
-
-#resultNumber {
-  margin-left: 2px;
-}
-
-
-/* ========================================
-   下部
-======================================== */
-
-.bottom-bar {
-  width: 100%;
-
-  height: 110px;
-
-  position: fixed;
-
-  bottom: 0;
-  left: 0;
-
-  z-index: 100;
-
-  border-top:
-    1px solid #dedee0;
-
-  background: #eeeeef;
-
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  padding-bottom:
-    env(safe-area-inset-bottom);
-}
-
-
-.data-text {
-  color: #24282c;
-
-  font-size:
-    clamp(
-      34px,
-      5vw,
-      50px
-    );
-
-  font-weight: 400;
-}
-
-
-/* ========================================
-   スマホ
-======================================== */
-
-@media (max-width: 600px) {
-
-  .app {
-    min-height: calc(100vh - 85px);
-
-    padding-bottom: 110px;
-  }
-
-
-  .top-controls {
-    height: 96px;
-
-    padding:
-      20px
-      24px
-      0;
-  }
-
-
-  .left-controls {
-    gap: 12px;
-  }
-
-
-  .circle-button {
-    width: 82px;
-    height: 82px;
-
-    border-width: 2.5px;
-  }
-
-
-  .camera-icon {
-    font-size: 31px;
-  }
-
-
-  .settings-icon {
-    font-size: 42px;
-  }
-
-
-  .ads-button {
-    width: 82px;
-    height: 82px;
-
-    border-width: 2.5px;
-  }
-
-
-  .ads-button span {
-    font-size: 24px;
-  }
-
-
-  .ads-button::after {
-    width: 110px;
-
-    height: 2.5px;
-  }
-
-
-  .title {
-    margin:
-      52px
-      0
-      85px;
-
-    font-size: 31px;
-  }
-
-
-  .wheel-container {
-    width: 80vw;
-  }
-
-
-  /* スマホ用の矢印 */
-  .pointer {
-    width: 72px;
-    height: 68px;
-
-    top: -51px;
-  }
-
-
-  /* STARTをさらに少し小さく */
-  .start-button {
-    font-size:
-      clamp(
-        44px,
-        7vw,
-        58px
+    const textPoint =
+      getPoint(
+        textAngle,
+        355
       );
-  }
 
 
-  .result-area {
-    margin-top: 30px;
-
-    min-height: 65px;
-
-    font-size: 36px;
-  }
+    const text =
+      createSvgElement("text");
 
 
-  .bottom-bar {
-    height: 85px;
-  }
+    text.textContent =
+      number;
 
 
-  .data-text {
-    font-size: 32px;
+    text.setAttribute(
+      "x",
+      textPoint.x
+    );
+
+
+    text.setAttribute(
+      "y",
+      textPoint.y
+    );
+
+
+    text.setAttribute(
+      "text-anchor",
+      "middle"
+    );
+
+
+    text.setAttribute(
+      "dominant-baseline",
+      "middle"
+    );
+
+
+    text.setAttribute(
+      "fill",
+      "#17191b"
+    );
+
+
+    text.setAttribute(
+      "font-size",
+      "58"
+    );
+
+
+    text.setAttribute(
+      "font-weight",
+      "500"
+    );
+
+
+    wheelGroup.appendChild(
+      text
+    );
+
   }
 
 }
 
 
 /* ========================================
-   小さいスマホ
+   初期描画
 ======================================== */
 
-@media (max-width: 380px) {
+createWheel();
 
-  .title {
-    font-size: 27px;
+
+/* ========================================
+   STARTを押している間だけ赤くする
+======================================== */
+
+function startPress() {
+
+  spinButton.classList.add(
+    "pressed"
+  );
+
+}
+
+
+function endPress() {
+
+  spinButton.classList.remove(
+    "pressed"
+  );
+
+}
+
+
+/* PC */
+
+spinButton.addEventListener(
+  "mousedown",
+  startPress
+);
+
+
+spinButton.addEventListener(
+  "mouseup",
+  endPress
+);
+
+
+spinButton.addEventListener(
+  "mouseleave",
+  endPress
+);
+
+
+/* スマホ */
+
+spinButton.addEventListener(
+  "touchstart",
+  startPress,
+  {
+    passive: true
+  }
+);
+
+
+spinButton.addEventListener(
+  "touchend",
+  endPress,
+  {
+    passive: true
+  }
+);
+
+
+spinButton.addEventListener(
+  "touchcancel",
+  endPress,
+  {
+    passive: true
+  }
+);
+
+
+/* ========================================
+   STARTクリック
+======================================== */
+
+spinButton.addEventListener(
+  "click",
+  spinWheel
+);
+
+
+/* ========================================
+   ルーレットを回す
+======================================== */
+
+function spinWheel() {
+
+
+  /* 回転中は連打不可 */
+
+  if (spinning) {
+    return;
   }
 
 
-  .wheel-container {
-    width: 82vw;
+  spinning = true;
+
+
+  /* 結果を非表示 */
+
+  resultArea.classList.remove(
+    "show"
+  );
+
+
+  /* ====================================
+     結果決定
+
+     最初の10回は指定順
+     11回目以降は完全ランダム
+  ==================================== */
+
+  let result;
+
+
+  if (
+    spinCount <
+    sequence.length
+  ) {
+
+    result =
+      sequence[
+        spinCount
+      ];
+
+  }
+
+  else {
+
+    result =
+      Math.floor(
+        Math.random() *
+        10
+      );
+
   }
 
 
-  .top-controls {
-    padding-left: 18px;
-    padding-right: 18px;
+  /* ====================================
+     停止位置
+
+     1区画 = 36度
+
+     中央固定ではなく、
+     当選数字の区画内で
+     ランダムな位置に停止。
+
+     境界から0.5度だけ離すので、
+     かなりギリギリにも止まる。
+  ==================================== */
+
+
+  const sectorStartAngle =
+    -90 +
+    result *
+    36;
+
+
+  /*
+    0.5〜35.5度の範囲
+
+    これにより、
+    区画の左端・中央・右端付近の
+    どこにでもランダムに停止する。
+  */
+
+  const offsetInsideSector =
+    0.5 +
+    Math.random() *
+    35;
+
+
+  /*
+    実際に矢印が指す
+    ルーレット上の角度
+  */
+
+  const targetAngleOnWheel =
+    sectorStartAngle +
+    offsetInsideSector;
+
+
+  /*
+    矢印は真上 = -90度
+
+    選ばれた区画内のランダム位置を
+    矢印位置まで回転させる
+  */
+
+  let targetRotation =
+    -90 -
+    targetAngleOnWheel;
+
+
+  /*
+    0〜360度に正規化
+  */
+
+  targetRotation =
+    (
+      targetRotation %
+      360 +
+      360
+    ) %
+    360;
+
+
+  /*
+    現在の角度
+  */
+
+  const currentAngle =
+    (
+      currentRotation %
+      360 +
+      360
+    ) %
+    360;
+
+
+  /*
+    目的角度までの差
+  */
+
+  let adjustment =
+    targetRotation -
+    currentAngle;
+
+
+  /*
+    必ず正方向に回転
+  */
+
+  if (
+    adjustment <= 0
+  ) {
+
+    adjustment += 360;
+
   }
 
 
-  .circle-button,
-  .ads-button {
-    width: 72px;
-    height: 72px;
-  }
+  /* ====================================
+     追加回転
+
+     7〜10周
+  ==================================== */
+
+  const extraSpins =
+    (
+      7 +
+      Math.floor(
+        Math.random() *
+        4
+      )
+    ) *
+    360;
 
 
-  .ads-button span {
-    font-size: 21px;
-  }
+  /*
+    最終回転角度
+  */
+
+  currentRotation +=
+    extraSpins +
+    adjustment;
+
+
+  /* ====================================
+     回転開始
+  ==================================== */
+
+  wheelGroup.style.transform =
+    `rotate(${currentRotation}deg)`;
+
+
+  /* ====================================
+     7秒後に結果表示
+  ==================================== */
+
+  setTimeout(
+    () => {
+
+
+      resultNumber.textContent =
+        result;
+
+
+      resultArea.classList.add(
+        "show"
+      );
+
+
+      spinCount++;
+
+
+      spinning = false;
+
+
+    },
+    7000
+  );
 
 }
