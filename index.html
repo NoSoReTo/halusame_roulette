@@ -3,40 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>0〜9 NUMBER ROULETTE</title>
+
+  <title>さめジャンボ</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <main class="container">
-    <h1>NUMBER ROULETTE</h1>
-<p class="mode" id="modeText">演出シーケンス</p>
-<div class="roulette-wrapper">
-  <div class="pointer">▼</div>
-  <div class="roulette" id="roulette">
-    <div class="number n0">0</div>
-    <div class="number n1">1</div>
-    <div class="number n2">2</div>
-    <div class="number n3">3</div>
-    <div class="number n4">4</div>
-    <div class="number n5">5</div>
-    <div class="number n6">6</div>
-    <div class="number n7">7</div>
-    <div class="number n8">8</div>
-    <div class="number n9">9</div>
+
+  <div class="app">
+
+    <!-- 上部 -->
+    <header class="top-bar">
+
+      <button class="icon-button" aria-label="カメラ">
+        📷
+      </button>
+
+      <div class="ads-off">
+        ADS
+      </div>
+
+      <button class="icon-button" aria-label="設定">
+        ⚙
+      </button>
+
+    </header>
+
+
+    <!-- タイトル -->
+    <h1 class="title">
+      第一回はるさめジャンボ
+    </h1>
+
+
+    <!-- ルーレット -->
+    <div class="roulette-area">
+
+      <!-- 矢印 -->
+      <div class="pointer"></div>
+
+
+      <div class="wheel-wrapper">
+
+        <div class="wheel" id="wheel">
+
+          <div class="number n0">0</div>
+          <div class="number n1">1</div>
+          <div class="number n2">2</div>
+          <div class="number n3">3</div>
+          <div class="number n4">4</div>
+          <div class="number n5">5</div>
+          <div class="number n6">6</div>
+          <div class="number n7">7</div>
+          <div class="number n8">8</div>
+          <div class="number n9">9</div>
+
+        </div>
+
+
+        <!-- 中央START -->
+        <button id="spinButton" class="start-button">
+          START
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- 結果 -->
+    <div class="result-area" id="resultArea">
+
+      <span class="result-label">結果:</span>
+
+      <span class="result-number" id="resultNumber">
+        ?
+      </span>
+
+    </div>
+
   </div>
-</div>
-<div class="result">
-  <span>RESULT</span>
-  <strong id="resultNumber">?</strong>
-</div>
-<button id="spinButton">SPIN</button>
-<p class="count">
-  回転回数：<span id="spinCount">0</span>
-</p>
-<p class="info" id="infoText">
-  1〜10回目：演出シーケンス
-</p>
-  </main>
+
+
+  <!-- 下部 -->
+  <footer class="bottom-bar">
+
+    <div class="data-set">
+      データをセット
+    </div>
+
+  </footer>
+
+
   <script src="script.js"></script>
+
 </body>
 </html>
