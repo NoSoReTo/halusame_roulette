@@ -1,76 +1,209 @@
-const roulette = document.getElementById(“roulette”);
-const spinButton = document.getElementById(“spinButton”);
-const resultNumber = document.getElementById(“resultNumber”);
-const spinCountElement = document.getElementById(“spinCount”);
-const modeText = document.getElementById(“modeText”);
-const infoText = document.getElementById(“infoText”);
+const wheel = document.getElementById("wheel");
+const spinButton = document.getElementById("spinButton");
+
+const resultArea = document.getElementById("resultArea");
+const resultNumber = document.getElementById("resultNumber");
+
 
 // ========================================
-// 最初の10回に出す数字をここで設定
+// 最初の10回に出す数字
 // ========================================
+
 const sequence = [
-7, 3, 9, 1, 5,
-0, 8, 2, 6, 4
+  7,
+  3,
+  9,
+  1,
+  5,
+  0,
+  8,
+  2,
+  6,
+  4
 ];
 
+
+// ========================================
+// 状態
 // ========================================
 
 let spinCount = 0;
+
 let currentRotation = 0;
+
 let spinning = false;
 
-spinButton.addEventListener(“click”, () => {
-if (spinning) return;
 
-spinning = true;
-spinButton.disabled = true;
+// ========================================
+// START
+// ========================================
 
-let result;
+spinButton.addEventListener("click", spinWheel);
 
-// 1〜10回目：設定した演出シーケンス
-if (spinCount < sequence.length) {
-result = sequence[spinCount];
-} else {
-// 11回目以降：完全ランダム
-result = Math.floor(Math.random() * 10);
 
-modeText.textContent = "完全ランダム";
-infoText.textContent = "11回目以降：0〜9からランダム";
+function spinWheel() {
+
+  // 回転中は連打禁止
+  if (spinning) {
+    return;
+  }
+
+
+  spinning = true;
+
+
+  // STARTを赤くする
+  spinButton.classList.add("spinning");
+
+
+  // 前回の結果を消す
+  resultArea.classList.remove("show");
+
+
+  let result;
+
+
+  // ========================================
+  // 最初の10回
+  // ========================================
+
+  if (spinCount < sequence.length) {
+
+    result = sequence[spinCount];
+
+  }
+
+
+  // ========================================
+  // 11回目以降はランダム
+  // ========================================
+
+  else {
+
+    result = Math.floor(
+      Math.random() * 10
+    );
+
+  }
+
+
+  // ========================================
+  // ルーレットの計算
+  // ========================================
+
+  /*
+    10個なので1区画36度
+
+    CSSのconic-gradientは
+    from -18deg から始まっているため、
+
+    0番が上のポインター位置に来るよう
+    数字ごとに36度ずつ調整する。
+  */
+
+  const anglePerNumber = 36;
+
+
+  /*
+    目標角度
+
+    result = 0 → 0度
+    result = 1 → -36度
+    result = 2 → -72度
+    ...
+  */
+
+  const targetAngle =
+    -result * anglePerNumber;
+
+
+  /*
+    現在位置を360度内にする
+  */
+
+  const currentAngle =
+    currentRotation % 360;
+
+
+  /*
+    目標までの差分
+
+    必ず正方向へ回る
+  */
+
+  let difference =
+    targetAngle - currentAngle;
+
+
+  while (difference <= 0) {
+    difference += 360;
+  }
+
+
+  /*
+    最低6〜9周
+  */
+
+  const extraSpins =
+    360 *
+    (
+      6 +
+      Math.floor(
+        Math.random() * 4
+      )
+    );
+
+
+  /*
+    新しい回転角度
+  */
+
+  currentRotation +=
+    extraSpins +
+    difference;
+
+
+  // ========================================
+  // 回転開始
+  // ========================================
+
+  wheel.style.transform =
+    `rotate(${currentRotation}deg)`;
+
+
+
+  // ========================================
+  // 回転終了
+  // CSSのtransitionと同じ4.5秒
+  // ========================================
+
+  setTimeout(() => {
+
+    // 結果を表示
+    resultNumber.textContent =
+      result;
+
+
+    // 結果エリアを表示
+    resultArea.classList.add(
+      "show"
+    );
+
+
+    // 回転回数を増やす
+    spinCount++;
+
+
+    // STARTの赤を解除
+    spinButton.classList.remove(
+      "spinning"
+    );
+
+
+    // 再度押せるようにする
+    spinning = false;
+
+
+  }, 4500);
 
 }
-
-// 数字1つあたり36度
-const anglePerNumber = 36;
-
-// 指定した数字が上のポインター位置に来る角度
-const targetAngle = 360 - (result * anglePerNumber + 18);
-
-// 最低5周＋ランダムな追加回転
-const extraSpins = 360 * (5 + Math.floor(Math.random() * 4));
-
-currentRotation += extraSpins;
-
-// 現在の回転位置を計算
-const currentMod = currentRotation % 360;
-
-// 目的の数字までの角度を計算
-const adjustment =
-(targetAngle - currentMod + 360) % 360;
-
-currentRotation += adjustment;
-
-// ルーレットを回転
-roulette.style.transform =
-rotate(${currentRotation}deg);
-
-// 回転終了後に結果表示
-setTimeout(() => {
-resultNumber.textContent = result;
-
-spinCount++;
-spinCountElement.textContent = spinCount;
-spinning = false;
-spinButton.disabled = false;
-
-}, 4000);
-});
